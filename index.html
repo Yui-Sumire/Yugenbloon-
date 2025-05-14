@@ -1,0 +1,422 @@
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Galeria de Artes</title>
+  <style>
+    :root {
+      --text-color: #333;
+      --card-bg: #fff;
+      --comment-border: #4CAF50;
+      --nav-bg: #f2f2f2;
+      --nav-text-color: #333;
+      --dark-mode-bg: #333;
+      --dark-mode-text-color: #fff;
+      --dark-mode-btn-bg: #666F88;
+      --btn-dark-bg: #4b6cb7;
+      --btn-dark-hover: #182848;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: #f2f2f2;
+      margin: 0;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transition: background-color 0.3s;
+      color: var(--text-color);
+    }
+
+    .navbar {
+      width: 100%;
+      background-color: var(--nav-bg);
+      padding: 10px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      margin-bottom: 20px;
+    }
+
+    .navbar a {
+      color: var(--nav-text-color);
+      text-decoration: none;
+      font-size: 18px;
+      margin: 0 15px;
+    }
+
+    .navbar a:hover {
+      text-decoration: underline;
+    }
+
+    body.dark-mode {
+      background-color: var(--dark-mode-bg);
+      color: var(--dark-mode-text-color);
+    }
+
+    body.dark-mode .navbar {
+      background-color: #333;
+    }
+
+    body.dark-mode .navbar a {
+      color: var(--dark-mode-text-color);
+    }
+
+    .logo-container {
+      text-align: center;
+      margin: 40px auto 20px;
+      padding: 20px;
+      border-radius: 12px;
+      background: var(--card-bg);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      animation: slideIn 1.5s ease-out;
+    }
+
+    @keyframes slideIn {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(0); }
+    }
+
+    @keyframes fadeUp {
+      from { transform: translateY(30px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    .logo-container img {
+      width: 160px;
+      max-width: 90%;
+      border-radius: 10px;
+      margin-bottom: 10px;
+      animation: pulse 3s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.05); opacity: 0.9; }
+    }
+
+    .image-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+      max-width: 1200px;
+      width: 100%;
+      margin-top: 30px;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      padding: 15px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      text-align: center;
+      transition: background 0.3s;
+      opacity: 0;
+      animation: fadeUp 0.8s ease forwards;
+    }
+
+    .card img {
+      width: 100%;
+      height: 500px;
+      object-fit: cover;
+      border-radius: 5px;
+      transition: transform 0.3s ease;
+    }
+
+    .card img:hover {
+      transform: scale(1.1);
+    }
+
+    .card:hover {
+      transform: scale(1.03);
+    }
+
+    .post-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+
+    .post-header img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      margin-right: 10px;
+      object-fit: cover;
+    }
+
+    .user-info {
+      flex-grow: 1;
+      text-align: left;
+    }
+
+    .username {
+      font-weight: bold;
+      font-size: 14px;
+    }
+
+    .time-posted {
+      font-size: 12px;
+      color: gray;
+    }
+
+    .options {
+      font-size: 20px;
+      color: gray;
+      cursor: pointer;
+    }
+
+    .like-button, .comment-button {
+      margin: 10px 5px 5px;
+      padding: 8px 15px;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 14px;
+      background-color: var(--btn-dark-bg);
+      color: white;
+      transition: background 0.3s ease;
+    }
+
+    .like-button:hover, .comment-button:hover {
+      background-color: var(--btn-dark-hover);
+    }
+
+    .comentario {
+      margin-top: 10px;
+      display: none;
+    }
+
+    .comentario input {
+      padding: 6px 10px;
+      width: 70%;
+      border: 1px solid var(--comment-border);
+      border-radius: 5px;
+      margin-bottom: 5px;
+    }
+
+    .comentario button {
+      padding: 6px 12px;
+      margin-left: 5px;
+      border: none;
+      border-radius: 5px;
+      background-color: #4CAF50;
+      color: white;
+      cursor: pointer;
+    }
+
+    .lista-comentarios {
+      margin-top: 10px;
+      text-align: left;
+      font-size: 14px;
+    }
+
+    .lista-comentarios p {
+      background: #eee;
+      padding: 6px 10px;
+      border-radius: 5px;
+      margin: 5px 0;
+    }
+
+    .legenda {
+      font-style: italic;
+      margin-top: 8px;
+      font-size: 14px;
+      color: #555;
+    }
+
+    body.dark-mode .legenda {
+      color: #ccc;
+    }
+
+    .dark-toggle {
+      width: 60px;
+      height: 30px;
+      background-color: var(--btn-dark-bg);
+      border-radius: 30px;
+      position: relative;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .dark-toggle .toggle-circle {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background-color: white;
+      position: absolute;
+      top: 1px;
+      left: 1px;
+      transition: transform 0.3s ease;
+    }
+
+    body.dark-mode .dark-toggle .toggle-circle {
+      transform: translateX(30px);
+    }
+
+    .sun-icon, .moon-icon {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 18px;
+      color: #fff;
+    }
+
+    .sun-icon { left: 8px; }
+    .moon-icon { right: 8px; }
+  </style>
+</head>
+<body>
+
+  <div class="navbar">
+    <a href="#inicio">Início</a>
+    <a href="#sobre">Sobre</a>
+    <div class="dark-toggle" onclick="alternarModo()">
+      <span class="sun-icon">🌞</span>
+      <span class="moon-icon">🌜</span>
+      <div class="toggle-circle"></div>
+    </div>
+  </div>
+
+  <div class="logo-container">
+    <img src="https://i.imgur.com/OWKw6uH.png" alt="Yugenbloon Logo">
+    <p>A evolução de uma arte que toca o intangível</p>
+  </div>
+
+  <h1>Galeria de Artes Online</h1>
+
+  <div class="image-container" id="galeria"></div>
+
+<script>
+  const imagens = [
+    "https://i.pinimg.com/736x/04/83/99/048399cefa54b7bdbbda3d4dd9b17a3f.jpg",
+    "https://i.pinimg.com/736x/d2/3e/6f/d23e6f33c656af6a96ec85e351a2fc0e.jpg",
+    "https://i.pinimg.com/736x/3f/79/3c/3f793c1e1f9a38ffe11a02df957b62df.jpg",
+    "https://i.pinimg.com/736x/d0/62/53/d06253874bf6a6c8a451206dfc4ff900.jpg",
+    "https://i.pinimg.com/736x/c5/3e/a4/c53ea4d14b3dd44aaf7e063529bcbd31.jpg",
+    "https://i.pinimg.com/736x/d5/ea/22/d5ea22494dbd55b473bfcb247296e586.jpg",
+    "https://i.pinimg.com/736x/06/07/8e/06078edfed9c0e053bb0de4498617201.jpg",
+    "https://i.pinimg.com/736x/73/c8/22/73c82217ed7da853fc162a993ad2dfe5.jpg",
+    "https://i.pinimg.com/736x/9d/ab/71/9dab7136a83ceb723952ec0960b76bbb.jpg",
+    "https://i.pinimg.com/736x/ef/8d/18/ef8d1841172ea1357ee8cfb32c01c787.jpg",
+    "https://i.pinimg.com/736x/df/4c/be/df4cbe6daca0245944a5b3191ec899f9.jpg",
+    "https://i.pinimg.com/736x/db/3c/cc/db3ccc1e4d8678a660ec1017658be8f4.jpg"
+  ];
+
+  const perfis = [
+    "https://i.pinimg.com/736x/bb/50/0e/bb500e8deca4e8227dfd45b77d490414.jpg",
+    "https://i.pinimg.com/736x/d3/6c/70/d36c70ab244c5e5e4557dfb01cb8587c.jpg",
+    "https://i.pinimg.com/736x/e1/53/80/e1538095245159118d03bdec435437fc.jpg",
+    "https://i.pinimg.com/736x/6b/5f/d5/6b5fd54c987faca7f2f5988c8f91d5e2.jpg",
+    "https://i.pinimg.com/736x/7d/7c/fd/7d7cfdf0249049eb3b287a8aab0fe870.jpg",
+    "https://i.pinimg.com/736x/5a/ec/f8/5aecf843b7698e05904a91e6f7e88efb.jpg",
+    "https://i.pinimg.com/736x/31/eb/a9/31eba90c7d0cca5ac86d712b5d4b191f.jpg",
+    "https://i.pinimg.com/736x/2b/0b/4e/2b0b4e38182aa87487e55458d7a46978.jpg",
+    "https://i.pinimg.com/736x/b2/9e/b3/b29eb348c1f9c65a5eb558532f80acd8.jpg",
+    "https://i.pinimg.com/736x/2f/9f/63/2f9f63253190c0d2d09733978a4abc0b.jpg",
+    "https://i.pinimg.com/736x/3a/74/fc/3a74fc17ffe0b043f90440e0e45bb7d0.jpg",
+    "https://i.pinimg.com/736x/da/4e/dc/da4edcbed3b20d45ca9482c12392019e.jpg"
+  ];
+
+  const nomesUsuarios = [
+    "nuy_illust",
+    "Yui_tsuki",
+    "suzume",
+    "hikari.sketch",
+    "aoi.nebula",
+    "mizu.ink",
+    "ren_kazeno",
+    "kana.arte",
+    "asami.studio",
+    "sora._draws",
+    "aya.mist",
+    "klein_moretti" // <- alterado aqui!
+  ];
+
+  const legendas = [
+    "Sonhos em camadas — onde o abstrato encontra o silêncio.",
+    "Fragmentos de alma em movimento.",
+    "A dança das formas que o olhar não capta, mas o coração sente.",
+    "Cores que narram silêncios esquecidos.",
+    "Horizontes abstratos, onde o tempo repousa.",
+    "O caos criativo do inconsciente.",
+    "Ondas internas se manifestam em cores indomáveis.",
+    "A leveza do invisível, pintada com intensidade.",
+    "A fúria da emoção capturada em traços suaves.",
+    "Universos colidem em silêncio na tela.",
+    "Entre o sagrado e o profano, uma pincelada de verdade.",
+    "O espírito da cor em sua forma mais pura."
+  ];
+
+  function gerarHorarioAleatorio() {
+    const hora = Math.floor(Math.random() * 24);
+    const minuto = Math.floor(Math.random() * 60);
+    return `${hora.toString().padStart(2, '0')}:${minuto.toString().padStart(2, '0')}`;
+  }
+
+  const galeria = document.getElementById('galeria');
+
+  imagens.forEach((src, index) => {
+    const horario = gerarHorarioAleatorio();
+
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.style.animationDelay = `${index * 0.2}s`;
+    card.innerHTML = `
+      <div class="post-header">
+        <img src="${perfis[index]}" alt="Foto de perfil">
+        <div class="user-info">
+          <span class="username">${nomesUsuarios[index]}</span><br>
+          <span class="time-posted">Postado às ${horario}</span>
+        </div>
+        <div class="options">⋮</div>
+      </div>
+      <img src="${src}" alt="Arte ${index + 1}">
+      <p class="legenda">${legendas[index]}</p>
+      <button class="like-button" onclick="curtir(this)">❤️ Curtir <span class="contador">0</span></button>
+      <button class="comment-button" onclick="mostrarComentario(this)">💬 Comentar</button>
+      <div class="comentario">
+        <input type="text" placeholder="Digite seu comentário...">
+        <button onclick="enviarComentario(this)">Enviar</button>
+      </div>
+      <div class="lista-comentarios"></div>
+    `;
+    galeria.appendChild(card);
+  });
+
+  function alternarModo() {
+    document.body.classList.toggle('dark-mode');
+  }
+
+  function curtir(botao) {
+    if (botao.dataset.curtido === "true") return;
+    const contador = botao.querySelector('.contador');
+    contador.textContent = parseInt(contador.textContent) + 1;
+    botao.dataset.curtido = "true";
+  }
+
+  function mostrarComentario(botao) {
+    const comentarioDiv = botao.parentElement.querySelector('.comentario');
+    comentarioDiv.style.display = 'block';
+  }
+
+  function enviarComentario(botao) {
+    const comentarioDiv = botao.parentElement;
+    const input = comentarioDiv.querySelector('input');
+    const comentario = input.value.trim();
+    if (comentario) {
+      const lista = comentarioDiv.parentElement.querySelector('.lista-comentarios');
+      const p = document.createElement('p');
+      p.textContent = comentario;
+      lista.appendChild(p);
+      input.value = '';
+    }
+  }
+</script>
+</body>
+</html>
